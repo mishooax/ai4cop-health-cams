@@ -17,7 +17,7 @@ $> docker build --tag ai4cop-health-cams:v1 -f docker/Dockerfile .
 $> docker exec -it ai4cop-health-cams bash
 ```
 
-1. Download CAMS model output data from the Copernicus ADS. You will have to register for an user account first. Instructions on how to do that are here:
+1. Download CAMS model output data from the [Copernicus ADS](https://ads.atmosphere.copernicus.eu/#!/home). You will have to register for an user account first. Instructions on how to do that are here: https://ads.atmosphere.copernicus.eu/cdsapp#!/usersupport.
 
 2. Pre-process the input (low-res and hi-res) data to netCDF4 format. The hi-res data should be 8x the resolution of the coarse input. The service has been tested with an input dataset obtained by coarsening the high-res output by 8x. You can, of course, use any input / output data sets as you consider fit. Make sure to set the correct input paths in the configuration YAML file. See `src/config/config.yaml` for an example.
 
