@@ -1,0 +1,126 @@
+input:
+  processed:
+    basedir: "your_data_basedir"
+    lowres:
+      # user hourly data
+      filename-template: "cams_eu_aq_16x16_hourly_preproc_{yyyymmddhh_start}_{yyyymmddhh_end}_region_{region_index}.nc"
+      # add here the low-res (16x16) input variables
+      varnames: ["pm2p5"]
+    hires:
+      filename-template: "cams_eu_aq_128x128_hourly_preproc_{yyyymmddhh_start}_{yyyymmddhh_end}_region_{region_index}.nc"
+      # add here the high-res (128 x 128) output variable
+      varnames: ["pm2p5"]
+    hires-const:
+      # time-invariant fields
+      filename-template: "const_fields_eu_128x128_preproc_region_{region_index}.nc"
+      # orog_scal: min-max scaled orography
+      # built_frac: built fraction ([0, 1])
+      # lsm: land-sea mask ([0, 1])
+      varnames: ["orog_scal", "built_frac", "lsm"]
+    # regions  indices
+    regions: ["add your region indices here"]
+
+output:
+  basedir: /scratch/sr-cams/
+  logdir: /scratch/sr-cams/logs/
+  model:
+    filename-template: "{gan_type}_weights_{start_date}_{end_date}.ckpt"
+  scalers:
+    filename-template: "{gan_type}_data_scalers_{start_date}_{end_date}.pkl"
+  predictions:
+    filename-template: "{model_type}_predictions_{varnames}_128x128_{start_date}_{end_date}.pt"
+  observations:
+    filename-template: "{model_type}_observations_{varnames}_128x128_{start_date}_{end_date}.pt"
+
+model:
+  # batch size
+  batch-size:
+    training: 128
+    inference: 128
+  # maximum number of epochs
+  max-epochs: 15
+  # plot predictions and losses during training
+  plot:
+    enabled: True
+    # plot every so many epochs
+    freq: 1
+  # number of worker threads for the data loader
+  num-workers: 16
+  # gradient penalty
+  gp-lambda: 10.
+  # hyperparameter for PSD loss (set to 0 to disable)
+  psd-lambda: 0.
+  # hyperparameter for L1-loss
+  l1-lambda: 10.
+  # hyperparameter for L2-loss
+  l2-lambda: 0.
+  # hyperparameter for total mass loss
+  mass-lambda: 0.
+  # hyperparameter for adversarial loss (generator only)
+  adv-lambda: 1.e-3
+  # optimizer settings
+  optimizer:
+    adam:
+      learn-rate: 5.e-5
+      betas: [0.5, 0.99]
+  # train/val/test split (sample index ranges)
+  split:
+    # train: [0, 60000]
+    # validation: [60001, 66000]
+    # test: [20001, 35660]
+    train: ["2014010100", "2020110500"]
+    validation: ["2020110501", "2021060108"]
+    test: ["2021060109", "2021103123"]
+  # you can use wandb to track your experiments
+  wandb: False
+  # use a pretrained model? T/F
+  pretrain: False
+  # arithmetic precision: mixed (16) or single (32)
+  precision: 32
+  earlystop:
+    min-delta: 1.e-5
+    patience: 5
+    mode: min
+
+  generator:
+    weight-decay: 0.
+    num-outputs: 1
+    activation-out: softplus
+    repeats: 1
+    spectral-norm: False
+    ensemble: False
+    ensemble-size: 8
+
+  discriminator:
+    repeats: 3
+    spectral-norm: False
+    type: wasserstein  # [relativistic | wasserstein]
+
+  unet:
+    norm: batch
+    weight-decay: 0  # 1.e-5
+    activation-out: softplus
+    # U-Net autoencoders require (at least) one HR input!
+    autoencoder: False
+    pooling: True
+    dropout-rate: 0.2
+    # hyperparameter for reconstruction loss (UNet only)
+    ae-lambda: 10.
+
+  xnet:
+    norm: batch
+    weight-decay: 1.e-5
+    activation-out: softplus
+    autoencoder: True
+    pooling: True
+    dropout-rate: 0.2
+
+  swin:
+    # https://arxiv.org/abs/2108.10257
+    mlp-ratio: 1.0
+    embedding-dim: 256
+    window-size: 4
+    patch-size: 4
+    num-heads: [8, 8, 8]
+    depths: [2, 2, 2]
+    activation-out: null
