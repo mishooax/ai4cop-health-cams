@@ -1,0 +1,43 @@
+name: ai4cop
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - black
+  - bokeh
+  - cartopy
+  - cdsapi
+  - cudatoolkit 10.2.*
+  - cudnn
+  - dask
+  - distributed
+  - einops
+  - ipywidgets
+  - jupyterlab
+  - matplotlib
+  - netcdf4
+  - numpy
+  - pandas
+  - properscoring
+  - pyaml
+  - pylint
+  - pip
+  - scikit-learn
+  - scipy
+  - pytorch=1.9.1=cuda102py38*
+  - pytorch-lightning
+  - tensorboard
+  - timm
+  - torchvision
+  - tqdm
+  - xarray
+  - xesmf
+  - xskillscore
+  - pip:
+    - cfgrib
+    - climetlab
+    - eccodes
+    - ecmwf-api-client
+    - ecmwflibs

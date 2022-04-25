@@ -17,7 +17,7 @@ from ai4cop_health_cams.plots import plot_batch_predictions
 LOGGER = get_logger(__name__)
 
 
-def get_test_dataset(transformers: Mapping[str, DataTransformer], config: YAMLConfig) -> AirQualityDatasetV2:
+def get_test_dataset(transformers: Mapping[str, DataTransformer], config: YAMLConfig) -> AirQualityDataset:
     """Builds train and validation datasets from the configuration settings.
     Args:
         scalers: CAMS i/o data scalers, {varname: scaler_object}
@@ -84,7 +84,7 @@ def predict(model_type: str, config: Mapping[str, Any], interactive: bool = Fals
         scalers: Mapping[str, DataTransformer] = pickle.load(f)
 
     # 2/ get test dataset / dataloader
-    ds_test: AirQualityDatasetV2 = get_test_dataset(scalers, config)
+    ds_test: AirQualityDataset = get_test_dataset(scalers, config)
     dl_test = torch.utils.data.DataLoader(
         ds_test, batch_size=config["model:batch-size:inference"], num_workers=config["model:num-workers"], shuffle=False
     )

@@ -26,7 +26,8 @@ LOGGER = get_logger(__name__)
 
 
 def get_scalers(
-    pretrained: bool = False, store_path: Optional[str] = None,
+    pretrained: bool = False,
+    store_path: Optional[str] = None,
 ) -> Mapping[str, DataTransformer]:
     if pretrained:
         # read scalers used for the pre-trained generator

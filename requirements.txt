@@ -1,0 +1,35 @@
+# common packages
+black
+bokeh
+cartopy
+cdsapi
+dask
+distributed
+einops
+ipywidgets
+jupyterlab
+matplotlib
+netcdf4
+nodejs
+numpy
+pandas
+properscoring
+pyaml
+pylint
+pip
+scikit-learn
+scipy
+timm
+tqdm
+xarray
+xesmf
+xskillscore
+pip
+
+# CUDA / pytorch packages
+cudatoolkit=10.2.*
+cudnn
+pytorch=1.9.1=cuda102py38*
+pytorch-lightning
+tensorboard
+torchvision

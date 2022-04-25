@@ -1,0 +1,7 @@
+# here you can install extensions and then build JupyterLab
+conda activate
+cd src
+pip install -e .
+cd ..
+jupyter lab build
+python -m ipykernel install --user --name base --display-name ai4copernicus
